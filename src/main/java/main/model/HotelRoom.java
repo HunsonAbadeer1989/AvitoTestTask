@@ -23,10 +23,15 @@ public class HotelRoom {
     @Column
     private Double price;
 
-    @Column(name = "creation_date")
+    @Column(name = "date_of_creation")
     private LocalDate date;
 
     @OneToMany(mappedBy = "room")
-    private List<Reservation> reservations;
+    private List<Booking> reservations;
 
+    public HotelRoom(String description, Double price) {
+        this.description = description;
+        this.price = price;
+        this.date = LocalDate.now();
+    }
 }

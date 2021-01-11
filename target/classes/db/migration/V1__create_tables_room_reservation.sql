@@ -5,12 +5,12 @@ create table room (
     id bigint not null auto_increment,
     description varchar(255),
     price double,
-    creation_date datetime,
+    date_of_creation datetime,
     primary key (id));
 
-create table reservation (
+create table booking (
     id bigint not null auto_increment,
-    beginning datetime,
-    ending datetime,
+    date_start datetime,
+    date_end datetime,
     room_id bigint,
     primary key (id));

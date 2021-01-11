@@ -11,19 +11,24 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="reservation")
-public class Reservation {
+@Table(name="booking")
+public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column
-    private LocalDate beginning;
+    private LocalDate date_start;
     @Column
-    private LocalDate ending;
+    private LocalDate date_end;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private HotelRoom room;
 
+    public Booking(HotelRoom room, LocalDate date_start, LocalDate date_end) {
+        this.room = room;
+        this.date_start = date_start;
+        this.date_end = date_end;
+    }
 }
