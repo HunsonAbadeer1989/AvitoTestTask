@@ -1,53 +1,49 @@
 package main.service.impl;
 
-import main.api.request.AddRoomRequest;
 import main.api.response.AddRoomResponse;
+import main.api.response.BadRequestResponse;
 import main.api.response.ListOfRoomsResponse;
 import main.api.response.ResponseApi;
 import main.model.HotelRoom;
-import main.repository.BookingRepository;
 import main.repository.RoomRepository;
 import main.service.RoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
-    private final BookingRepository bookingRepository;
 
-    public RoomServiceImpl(RoomRepository roomRepository, BookingRepository bookingRepository) {
+    public RoomServiceImpl(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
-        this.bookingRepository = bookingRepository;
     }
 
     @Override
-    public ResponseEntity<ResponseApi> addRoom(AddRoomRequest addRoomRequest) {
-        HotelRoom newRoom = roomRepository.save(new HotelRoom(addRoomRequest.getDescription(),
-                addRoomRequest.getPrice()));
+    public ResponseEntity<ResponseApi> addRoom(String description, Double price) {
+        HotelRoom newRoom = roomRepository.save(new HotelRoom(description, price));
         return new ResponseEntity<>(new AddRoomResponse(newRoom.getId()), HttpStatus.OK);
     }
 
     public ResponseEntity<ResponseApi> deleteRoom(long id) {
-        HotelRoom tempRoom = roomRepository.findById(id);
-        if (tempRoom == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        Optional<HotelRoom> tempRoom = roomRepository.findById(id);
+        if (tempRoom.isEmpty()) {
+            return new ResponseEntity<>(new BadRequestResponse("This room Id " + id + " isn't exist"),
+                    HttpStatus.BAD_REQUEST);
         } else {
-            tempRoom.setReservations(new ArrayList<>());
-            roomRepository.delete(tempRoom);
-            bookingRepository.deleteBookingsByRoomId(id);
+            roomRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
     @Override
     public ResponseEntity<ResponseApi> getListOfRooms(String sort) {
-        if(sort == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (sort == null) {
+            return new ResponseEntity<>(new BadRequestResponse("Wrong sort param!"),
+                    HttpStatus.BAD_REQUEST);
         }
         List<HotelRoom> roomList;
         switch (sort) {
@@ -61,10 +57,11 @@ public class RoomServiceImpl implements RoomService {
                 roomList = roomRepository.roomsByPrice();
                 break;
         }
+        if(roomList.isEmpty()){
+            return new ResponseEntity<>(new BadRequestResponse("List is empty!"),
+                    HttpStatus.BAD_REQUEST);
+        }
         ResponseApi response = new ListOfRoomsResponse(roomList);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-
-
 }

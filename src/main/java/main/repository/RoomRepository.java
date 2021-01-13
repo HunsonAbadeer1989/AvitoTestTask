@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RoomRepository extends JpaRepository<HotelRoom, Integer> {
+public interface RoomRepository extends JpaRepository<HotelRoom, Long> {
 
-    HotelRoom findById(long id);
+//    Optional<HotelRoom> findById(long id);
 
     @Query(value = "SELECT id, description, price, date_of_creation FROM room AS r " +
             "ORDER BY r.date_of_creation ASC", nativeQuery = true)

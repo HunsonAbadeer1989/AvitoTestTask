@@ -1,16 +1,17 @@
 package main.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 @Entity
 @Table(name="room")
 public class HotelRoom {
@@ -33,5 +34,9 @@ public class HotelRoom {
         this.description = description;
         this.price = price;
         this.date = LocalDate.now();
+    }
+
+    public HotelRoom(long id) {
+        this.id = id;
     }
 }

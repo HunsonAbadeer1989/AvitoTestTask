@@ -9,8 +9,9 @@ create table room (
     primary key (id));
 
 create table booking (
-    id bigint not null auto_increment,
+    id bigint primary key not null auto_increment,
     date_start datetime,
     date_end datetime,
     room_id bigint,
-    primary key (id));
+    foreign key (room_id) references room (id) on update cascade on delete cascade);
+

@@ -1,7 +1,6 @@
 package main.controller;
 
 import com.sun.istack.NotNull;
-import main.api.request.AddBookingRequest;
 import main.api.response.ResponseApi;
 import main.service.impl.BookingServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,10 @@ public class BookingController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseApi> addBooking(@RequestBody AddBookingRequest request){
-        return bookingService.addBooking(request);
+    public ResponseEntity<ResponseApi> addBooking(@RequestParam @NotNull Long room_id,
+                                                  @RequestParam @NotNull String date_start,
+                                                  @RequestParam @NotNull String date_end){
+        return bookingService.addBooking(room_id, date_start, date_end);
     }
 
     @DeleteMapping("/{id}")

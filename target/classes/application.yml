@@ -11,3 +11,5 @@ spring:
 spring.h2.console.enable: true
 spring.flyway.enabled: true
 spring.jpa.database-platform: org.hibernate.dialect.MySQL5Dialect
+
+server.port: 8080
